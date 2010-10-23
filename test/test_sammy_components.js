@@ -2,9 +2,42 @@
   // $(function() {
   with(QUnit) {
 
+    context('Sammy', 'inheritance')
+    .should('deal ok with super methods', function() {
+      var context = this;
+      var Foo = Sammy.Class.extend({
+        foo: function(){
+          context.Foo = true;
+        },
+        bar: function() {
+          context.Bar = true;
+        }
+      });
+      var FooFoo = Foo.extend({
+        init: function() {
+          this.foo();
+        },
+        foo: function(){
+          context.FooFoo = true;
+          this.bar();
+        },
+        bar: function() {
+          context.BarBar = true;
+          this._super();
+        }
+      });
+      var f = new FooFoo();
+      ok(context.FooFoo);
+      ok(!context.Foo); // because FooFoo.foo doesn't call its  super method
+      ok(context.BarBar);
+      ok(context.Bar);
+    });
+
     context('Sammy.Component', 'app component', {
       before: function() {
-        this.a = new Sammy.Application();
+        this.a = new Sammy.Application(function(app){
+          this.debug = true;
+        });
       }
     })
     .should('have no parent', function() {
@@ -256,6 +289,24 @@
         equals(e.target.namespace, context.comp.namespace);
       });
       this.subcomp.trigger('bash');
+      this.app.unload();
+    })
+    .should('bind to all component events that are already being listed to', function(){
+      var context = this;
+      this.app.run();
+      this.subcomp.bind('bash', function(e){
+        
+      });
+      this.subcomp.bind('bar', function(e){
+        
+      });
+      this.subcomp.bindToAllEvents(function(e){
+        context[e.type] = true;
+      });
+      this.subcomp.trigger('bash');
+      this.subcomp.trigger('bar');
+      ok(context.bash);
+      ok(context.bar);
       this.app.unload();
     });
   }
