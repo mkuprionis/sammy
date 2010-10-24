@@ -96,6 +96,15 @@
       equal(typeof this.app._listeners[this.app.eventNamespace() + '.' + 'bash'], 'object');
       equal(typeof this.app._listeners[bar.eventNamespace() + '.' + 'foo'], 'undefined');
       equal(typeof this.app._listeners[bar.eventNamespace() + '.' + 'bar'], 'undefined');
+    })
+    .should('be able to handle error', function(){
+      this.app.raise_errors = false;
+      expect(1);
+      var bar = this.app.createComponent('bar', function() {
+        throw {};
+        // or maybe throw in route?..
+      });
+      ok(true);
     });
 
     context('Sammy.Component','nested components', {

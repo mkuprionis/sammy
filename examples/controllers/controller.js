@@ -12,7 +12,7 @@
  */
 
 $(function(){
-  app = {};
+  var app = {};
   app.overview = {};
   app.widgets = {};
   app.details = {};
@@ -27,14 +27,10 @@ $(function(){
 
     $.template('overview', $('#tpl-overview'));
 
-    this.get('#/sips', function(rc){
+    this.get('#/sips', function(c){
       var content = $($.tmpl('overview', {}));
 
-      rc.partials = {};
-
-      // hm, would I add additional data to rc or pass as separate param
-      async(
-        rc,
+      c.renderAsync(
         [toolbar, 'render'],
         [gnav, 'render'],
         [lnav, 'render'],
@@ -60,57 +56,55 @@ $(function(){
 
   app.overview.toolbar = function(c) {
     /**
-     * @param rc {Sammy.RenderContext}
+     * @param c {Sammy.EventContext}
      * @param callback {function}
      */
-    this.render = function(rc, callback) {
+    this.render = function(c, callback) {
       $.template('overview-toolbar', $('#tpl-overview-toolbar'));
-      rc.partials[this.name] = $($.tmpl('overview-toolbar', {}));
+      c.content = $($.tmpl('overview-toolbar', {}));
       callback();
     };
   };
 
   app.overview.gnav = function(c) {
     /**
-     * @param rc {Sammy.RenderContext}
+     * @param rc {Sammy.EventContext}
      * @param callback {function}
      */
-    this.render = function(rc, callback) {
+    this.render = function(c, callback) {
       $.template('overview-gnav', $('#tpl-overview-gnav'));
-      rc.partials[this.name] = $($.tmpl('overview-gnav', {}));
+      c.content = $($.tmpl('overview-gnav', {}));
       callback();
     };
   };
 
   app.overview.lnav = function() {
     /**
-     * @param rc {Sammy.RenderContext}
+     * @param c {Sammy.EventContext}
      * @param callback {function}
      */
-    this.render = function(rc, callback) {
+    this.render = function(c, callback) {
       var content,
           lnav = this;
 
       $.template('overview-lnav', $('#tpl-overview-lnav'));
-      content = $($.tmpl('overview-lnav', {}));
+      c.content = $($.tmpl('overview-lnav', {}));
 
-      content.find('li').click(function(){
+      c.content.find('li').click(function(){
         lnav.trigger('localNavSelected');
       });
-
-      rc.partials[this.name] = content;
       callback();
     };
   };
 
   app.overview.context = function() {
     /**
-     * @param rc {Sammy.RenderContext}
+     * @param rc {Sammy.EventContext}
      * @param callback {function}
      */
-    this.render = function(rc, callback) {
+    this.render = function(c, callback) {
       $.template('widget-context', $('#tpl-widget-context'));
-      rc.partials[this.name] = $($.tmpl('widget-context', {}));
+      c.content = $($.tmpl('widget-context', {}));
       callback();
     };
   };
@@ -123,24 +117,21 @@ $(function(){
     $.template('details', $('#tpl-details'));
 
     /**
-     * @param r {Sammy.RenderContext}
+     * @param r {Sammy.EventContext}
      */
-    this.get('#/sips/details', function(rc){
+    this.get('#/sips/details', function(c){
       var content = $($.tmpl('details', {}));
 
-      rc.partials = {};
-
       // hm, would I add additional data to rc or pass as separate param
-      async(
-        rc,
+      c.renderAsync(
         [toolbar, 'render'],
         [extended, 'render'],
         [context, 'render'],
-        function(rc) {
-          content.find('.details-toolbar').replaceWith(rc.partials[toolbar.name]);
-          content.find('.extended').replaceWith(rc.partials[extended.name]);
-          content.find('.context').replaceWith(rc.partials[context.name]);
-          rc.swap(content);
+        function(c) {
+          content.find('.details-toolbar').replaceWith(c.partials[toolbar.name]);
+          content.find('.extended').replaceWith(c.partials[extended.name]);
+          content.find('.context').replaceWith(c.partials[context.name]);
+          c.swap(content);
         }
       );
     });
@@ -148,36 +139,36 @@ $(function(){
 
   app.details.toolbar = function() {
     /**
-     * @param rc {Sammy.RenderContext}
+     * @param c {Sammy.EventContext}
      * @param callback {function}
      */
-    this.render = function(rc, callback) {
+    this.render = function(c, callback) {
       $.template('details-toolbar', $('#tpl-details-toolbar'));
-      rc.partials[this.name] = $($.tmpl('details-toolbar', {}));
+      c.content = $($.tmpl('details-toolbar', {}));
       callback();
     };
   };
 
   app.details.context = function() {
     /**
-     * @param rc {Sammy.RenderContext}
+     * @param c {Sammy.EventContext}
      * @param callback {function}
      */
-    this.render = function(rc, callback) {
+    this.render = function(c, callback) {
       $.template('widget-context', $('#tpl-widget-context'));
-      rc.partials[this.name] = $($.tmpl('widget-context', {}));
+      c.content = $($.tmpl('widget-context', {}));
       callback();
     };
   };
 
   app.details.extended = function() {
     /**
-     * @param rc {Sammy.RenderContext}
+     * @param c {Sammy.EventContext}
      * @param callback {function}
      */
-    this.render = function(rc, callback) {
+    this.render = function(c, callback) {
       $.template('details-extended', $('#tpl-details-extended'));
-      rc.partials[this.name] = $($.tmpl('details-extended', {}));
+      c.content = $($.tmpl('details-extended', {}));
       callback();
     };
   };
@@ -193,44 +184,5 @@ $(function(){
   }).run('#/sips');
 
 
-  /**
-   * Takes in any number of functions to be executed async/paralelly.
-   * For instance, function needs to fetch data and fetch template.
-   * Or it needs its components to fetch their templates and data.
-   *
-   * Each function gets
-   *  - RenderContext passed as param
-   *  - callback which it needs to execute when done
-   *
-   * Function is expected to modify context - that's the way to pass content.
-   *
-   * Last argument has to be callback that is executed after all functions finish.
-   *
-   * @param arguments[0] {Sammy.RenderContext}
-   * @param arguments[1..length-2] {function} functions to execute
-   * @param arguments[length-1] {function} callback
-   */
-  function async() {
-    var args = Array.prototype.slice.call(arguments),
-        context = args.shift(),
-        callback = args.pop(),
-        functions = args,
-        completed = 0;
-
-    if( functions.length === 0) {
-      callback(context);
-    }
-
-    for(var i=0; i < functions.length; i++) {
-      // hacky hack, need to rewrite properly
-      // @TODO rewrite. If render is put into Component.prototype, these hack should not be needed
-      // Maybe helper could be used
-      functions[i][0][functions[i][1]].apply(functions[i][0], [context, function() {
-        completed++;
-        if(completed === functions.length) {
-          callback(context);
-        }
-      }]);
-    }
-  };
+  
 });
