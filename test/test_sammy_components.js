@@ -172,7 +172,7 @@
       this.app.bind('bar', function(){
         context.bar = 'app:bar';
       });
-      
+
       this.app.run();
       this.subcomp.trigger('foo');
       equal(this.foo, 'comp:foo');
@@ -295,10 +295,10 @@
       var context = this;
       this.app.run();
       this.subcomp.bind('bash', function(e){
-        
+
       });
       this.subcomp.bind('bar', function(e){
-        
+
       });
       this.subcomp.bindToAllEvents(function(e){
         context[e.type] = true;
@@ -308,6 +308,95 @@
       ok(context.bash);
       ok(context.bar);
       this.app.unload();
+    });
+
+    context('Sammy.Component','helpers', {
+      before: function() {
+        var context = this;
+        var comp = function(){
+          this.get('#/', function() {
+            this.params['belch'] = 'boosh';
+            context.event_context = this;
+          });
+
+          this.bind('blurgh', function() {
+            context.event_context = this;
+          });
+
+          this.helpers({
+            helpme: function() {
+              return "halp!";
+            }
+          });
+        };
+        context.event_context = null;
+        this.app = new Sammy.Application(function() {
+          context.comp = this.createComponent('comp', comp);
+        });
+      }
+    })
+    .should('extend event context for routes', function() {
+      var context = this;
+      this.app.run('#/');
+      soon(function() {
+        ok(context['event_context']);
+        isType(context.event_context.helpme, 'Function');
+        this.app.unload();
+      }, this, 2, 2);
+    })
+    .should('extend event context for bind', function() {
+      var context = this;
+      this.app.run('#/');
+      this.comp.trigger('blurgh');
+      soon(function() {
+        ok(context['event_context']);
+        isType(context.event_context.helpme, 'Function');
+        this.app.unload();
+      }, this, 2, 2);
+    });
+
+    context('Sammy.Component','helper', {
+      before: function() {
+        var context = this;
+        context.event_context = null;
+        this.app = new Sammy.Application(function() {
+          context.comp = this.createComponent('comp', function(){
+            this.helper(
+              "helpme", function() {
+                return "halp!";
+              }
+            );
+
+            this.get('#/', function() {
+              this.params['belch'] = 'boosh';
+              context.event_context = this;
+            });
+
+            this.bind('blurgh', function() {
+              context.event_context = this;
+            });
+          });
+        });
+      }
+    })
+    .should('extend event context for routes', function() {
+      var context = this;
+      this.app.run('#/');
+      soon(function() {
+        ok(context['event_context']);
+        isType(context.event_context.helpme, 'Function');
+        this.app.unload();
+      }, this, 2, 2);
+    })
+    .should('extend event context for bind', function() {
+      var context = this;
+      this.app.run('#/');
+      this.comp.trigger('blurgh');
+      soon(function() {
+        ok(context['event_context']);
+        isType(context.event_context.helpme, 'Function');
+        this.app.unload();
+      }, this, 2, 2);
     });
   }
 })(jQuery);
