@@ -11,7 +11,8 @@
   <script type="text/javascript" src="app.sips.lnav.js"></script>
   <script type="text/javascript" src="app.sips.toolbar.js"></script>
   <script type="text/javascript" src="app.details.js"></script>
-  <script type="text/javascript" src="app.details.extended.js"></script>
+  <script type="text/javascript" src="app.details.users.js"></script>
+  <script type="text/javascript" src="app.details.calendar.js"></script>
   <script type="text/javascript" src="app.details.toolbar.js"></script>
   <script type="text/javascript" src="app.widget.context.js"></script>
   
@@ -97,8 +98,8 @@
     <div class="panel context">
       <h2>${name}</h2>
       <ul>
-        <li><a href="#/sips/control/1/details/users">Extended detail 1</a></li>
-        <li><a href="#/sips/control/1/details/logs">Extended detail 2</a></li>
+        <li><a href="#/sips/control/1/details/users">Users</a></li>
+        <li><a href="#/sips/control/1/details/calendar">Calendar</a></li>
       </ul>
     </div>
   </script>
@@ -112,7 +113,7 @@
 
   <script id="tpl-details-toolbar" type="text/x-jquery-tmpl" charset="utf-8">
     <div class="toolbar details-toolbar">
-      <div><a href="${item.context.app.last_location}"&laquo; Back</div>
+      <div><a href="">&laquo; Back</div>
     </div>
   </script>
 

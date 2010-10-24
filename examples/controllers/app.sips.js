@@ -25,13 +25,13 @@ app.sips.controller = function() {
                                                       e.type,  // event name goes for path
                                                       data
                                                     );
-    
+    // show 'loading'
     context.render(contextInfoContext, function() {
       content.find('.context').replaceWith(contextInfoContext.content);
     });
   });
 
-  this.get('#/sips', function(c){
+  this.get(/^#\/sips$/, function(c){
     content = $($.tmpl('sips', {}));
 
     c.renderAsync(

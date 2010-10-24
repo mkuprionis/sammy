@@ -1,6 +1,11 @@
 var app = app || {};
 app.details = app.details || {};
-app.details.extended = function() {
+app.details.calendar = function() {
+
+  this.get(/.*\.calendar/, function() {
+    this.app.log('rendering calendar');
+  });
+
   /**
    * @param c {Sammy.EventContext}
    * @param callback {function}
