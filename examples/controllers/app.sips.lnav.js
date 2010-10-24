@@ -6,14 +6,13 @@ app.sips.lnav = function() {
    * @param callback {function}
    */
   this.render = function(c, callback) {
-    var content,
-        lnav = this;
+    var context = c;
 
-    $.template('overview-lnav', $('#tpl-overview-lnav'));
-    c.content = $($.tmpl('overview-lnav', {}));
+    $.template('sips-lnav', $('#tpl-sips-lnav'));
+    c.content = $($.tmpl('sips-lnav', {items: {123: 'Item 1', 456: 'Item 2'}}, {context: context}));
 
     c.content.find('li').click(function(){
-      lnav.trigger('localNavSelected');
+      context.trigger('lnav click', {item: $(this).tmplItem(), context: context, type: 'folder', id: 1}); // or somehow $(this).data('type');
     });
     callback();
   };

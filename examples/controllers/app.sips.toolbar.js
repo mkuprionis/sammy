@@ -6,8 +6,8 @@ app.sips.toolbar = function(c) {
    * @param callback {function}
    */
   this.render = function(c, callback) {
-    $.template('overview-toolbar', $('#tpl-overview-toolbar'));
-    c.content = $($.tmpl('overview-toolbar', {}));
+    $.template('sips-toolbar', $('#tpl-sips-toolbar'));
+    c.content = $($.tmpl('sips-toolbar', {}));
     callback();
   };
 };

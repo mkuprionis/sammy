@@ -55,9 +55,9 @@
   <div id="main" >
   </div>
 
-  <script id="tpl-overview" type="text/x-jquery-tmpl" charset="utf-8">
-    <div id="overview">
-      <div class="toolbar overview-toolbar"></div>
+  <script id="tpl-sips" type="text/x-jquery-tmpl" charset="utf-8">
+    <div id="sips">
+      <div class="toolbar sips-toolbar"></div>
       <div class="panel gnav"></div>
       <div class="panel lnav"></div>
       <div class="panel context"></div>
@@ -65,38 +65,40 @@
     </div>
   </script>
 
-  <script id="tpl-overview-toolbar" type="text/x-jquery-tmpl" charset="utf-8">
-    <div class="toolbar overview-toolbar">
+  <script id="tpl-sips-toolbar" type="text/x-jquery-tmpl" charset="utf-8">
+    <div class="toolbar sips-toolbar">
       <h2>Toolbar</h2>
     </div>
   </script>
 
-  <script id="tpl-overview-gnav" type="text/x-jquery-tmpl" charset="utf-8">
+  <script id="tpl-sips-gnav" type="text/x-jquery-tmpl" charset="utf-8">
     <div class="panel gnav">
       <h2>Global navigation</h2>
       <ul>
-        <li>Item 1</li>
-        <li>Item 2</li>
+        {{each(i, name) items}}
+          <li>${name}</li>
+        {{/each}}
       </ul>
     </div>
   </script>
 
-  <script id="tpl-overview-lnav" type="text/x-jquery-tmpl" charset="utf-8">
+  <script id="tpl-sips-lnav" type="text/x-jquery-tmpl" charset="utf-8">
     <div class="panel lnav">
       <h2>Local navigation</h2>
       <ul>
-        <li>Local Item 1</li>
-        <li>Local Item 2</li>
+        {{each(id, name) items}}
+          <li>${name}</li>
+        {{/each}}
       </ul>
     </div>
   </script>
 
   <script id="tpl-widget-context" type="text/x-jquery-tmpl" charset="utf-8">
     <div class="panel context">
-      <h2>Context info</h2>
+      <h2>${name}</h2>
       <ul>
-        <li><a href="#/sips/details">Extended detail 1</a></li>
-        <li><a href="#/sips/details">Extended detail 2</a></li>
+        <li><a href="#/sips/control/1/details/users">Extended detail 1</a></li>
+        <li><a href="#/sips/control/1/details/logs">Extended detail 2</a></li>
       </ul>
     </div>
   </script>
@@ -110,13 +112,13 @@
 
   <script id="tpl-details-toolbar" type="text/x-jquery-tmpl" charset="utf-8">
     <div class="toolbar details-toolbar">
-      <div>« Back link</div>
+      <div><a href="${item.context.app.last_location}"&laquo; Back</div>
     </div>
   </script>
 
   <script id="tpl-details-extended" type="text/x-jquery-tmpl" charset="utf-8">
     <div class="panel extended-detail">
-      <h2>Something</h2>
+      <h2>${name}</h2>
     </div>
   </script>
 </body>
