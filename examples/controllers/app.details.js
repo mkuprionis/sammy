@@ -38,8 +38,8 @@ app.details.controller = function() {
     // check console: event-context-after is trigerred before rendering is done
 
     content.find('.extended').replaceWith(this.content);
-    this.app.log('got users, adding to content');
-    this.app.swap(content); // better would be this.swap();
+    this.log('got users, adding to content');
+    this.swap(content); // better would be this.swap();
   });
 
   calendar.bind('rendering done', function(e) {

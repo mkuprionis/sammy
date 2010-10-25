@@ -14,15 +14,15 @@ app.details.users = function() {
     var ping = function(callback) {
       $.get('ping.php', callback);
     }
-
+    
     // Nice trick, but seems to me it blocks execution
     // other way of doing this in aoo,details.calendar.js
     this.send(ping).then(function(resp){
-      context.app.log('users rendered');
+      context.log('users rendered');
       context.trigger('rendering done'); // will pass data.context by itself
     });
 
-    context.app.log('users route handler returns');
+    this.log('users route handler returns');
 
     // {return and trigger event-context-after}
     // this happens before ajax call is done
