@@ -31,8 +31,14 @@ app.details.controller = function() {
     // content.find('.extended').(show loading)
   });
 
-  users.bind('rendering done', function(e) {
+  // users.bind('event-context-after', function(e) {
+  // cannot bind to event-context-after
+  // event though route handler has teturned, route handling may still be in progress - e.g. ajax call
+  users.bind('event-context-after', function(e) {
+    // check console: event-context-after is trigerred before rendering is done
+
     content.find('.extended').replaceWith(this.content);
+    this.app.log('got users, adding to content');
     this.app.swap(content); // better would be this.swap();
   });
 
