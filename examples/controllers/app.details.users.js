@@ -13,7 +13,7 @@ app.details.users = function() {
     // long async operation
     var ping = function(callback) {
       $.get('ping.php', callback);
-    }
+    };
     
     // Nice trick, but seems to me it blocks execution
     // other way of doing this in aoo,details.calendar.js

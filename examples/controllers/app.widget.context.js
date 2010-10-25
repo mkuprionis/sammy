@@ -1,3 +1,4 @@
+
 var app = app || {};
 app.widget = app.widget || {};
 app.widget.context = function() {
@@ -12,7 +13,7 @@ app.widget.context = function() {
     if( c.params && c.params.type && c.params.type == 'folder') {
       data.name = "Folder Y";
     } else {
-      data.name = 'Control X'
+      data.name = 'Control X';
     }
     c.content = $($.tmpl('widget-context', data));
     callback();
