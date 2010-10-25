@@ -2,17 +2,12 @@ var app = app || {};
 app.details = app.details || {};
 app.details.calendar = function() {
 
-  this.get(/.*\.calendar/, function() {
+  this.get(/#.*\/calendar/, function() {
     this.app.log('rendering calendar');
+    $.template('details-extended', $('#tpl-details-extended'));
+    this.content = $($.tmpl('details-extended', {name: 'Calendar'}));
+
+    this.trigger('rendering done'); // will pass data.context by itself
   });
 
-  /**
-   * @param c {Sammy.EventContext}
-   * @param callback {function}
-   */
-  this.render = function(c, callback) {
-    $.template('details-extended', $('#tpl-details-extended'));
-    c.content = $($.tmpl('details-extended', {}));
-    callback();
-  };
 };

@@ -9,28 +9,40 @@ app.details.controller = function() {
   $.template('details', $('#tpl-details'));
 
   var content = $($.tmpl('details', {}));
+  var isRendered = false;
 
-  this.around(function(callback){
+  // Suppose we cache this content somehow
+  // so no need to rerender when users clicks other extended detail
+  this.before(function(){
     var eventContext = this;
-    // hm, would I add additional data to rc or pass as separate param
-    eventContext.renderAsync(
-      [toolbar, 'render'],
-      [context, 'render'],
-      function(eventContext) {
-        content.find('.details-toolbar').replaceWith(eventContext.partials[toolbar.name]);
-        content.find('.context').replaceWith(eventContext.partials[context.name]);
-        eventContext.swap(content);
+
+    if(!isRendered) {
+      // hm, would I add additional data to rc or pass as separate param
+      eventContext.renderAsync(
+        [toolbar, 'render'],
+        [context, 'render'],
+        function(eventContext) {
+          content.find('.details-toolbar').replaceWith(eventContext.partials[toolbar.name]);
+          content.find('.context').replaceWith(eventContext.partials[context.name]);
+          isRendered = true;
+        }
+      );
+    }
+    // content.find('.extended').(show loading)
+  });
+
+  users.bind('rendering done', function(e) {
+    content.find('.extended').replaceWith(this.content);
+    this.app.swap(content); // better would be this.swap();
+  });
+
+  calendar.bind('rendering done', function(e) {
+    var context = this;
+    content.find('.extended').hide(
+      'slow',
+      function(){
+        $(this).replaceWith(context.content);
       }
     );
-
-    // this := EventContext
-    // should work, don't get why not
-    // Idea is to that details controller knows that any route will change
-    // only right panel (suppose so).
-    // So it renders other panels/components itself,
-    // gets route from component that handles it and puts everything into content.
-    eventContext.send(callback).then(function(renderedRoute) {
-      content.find('.extended').replaceWith(renderedRoute);
-    });
   });
 };

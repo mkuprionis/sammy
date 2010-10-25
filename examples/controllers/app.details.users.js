@@ -8,6 +8,8 @@ app.details.users = function() {
   this.get('#/sips/control/:id/details/users', function() {
     this.app.log('rendering users');
     $.template('details-extended', $('#tpl-details-extended'));
-    return $($.tmpl('details-extended', {name: 'Users'}));
+    this.content = $($.tmpl('details-extended', {name: 'Users'}));
+
+    this.trigger('rendering done'); // will pass data.context by itself
   });
 };
